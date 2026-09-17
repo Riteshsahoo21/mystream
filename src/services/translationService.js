@@ -97,7 +97,7 @@ async function requestTranslationBatch(values, targetLang, options) {
 
 export async function translateTexts(texts, targetLang = 'en', options = {}) {
   const values = texts.map((value) => typeof value === 'string' ? value : '');
-  if (!values.length || targetLang === 'en' || !GOOGLE_API_KEY) return values;
+  if (!values.length || targetLang === 'en' || (!GOOGLE_API_KEY && !PROXY_ENDPOINT)) return values;
 
   const results = [...values];
   const missing = new Map();

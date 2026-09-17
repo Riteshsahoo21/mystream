@@ -16,8 +16,11 @@ export function MobileBottomNav() {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 px-3 pb-4 pt-1">
-      <div className="glass-dock bg-[#080B14]/90 border border-white/10 rounded-2xl py-2 px-3 flex items-center justify-around shadow-2xl backdrop-blur-2xl">
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 px-3 pt-1"
+      style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 12px))' }}
+    >
+      <div className="glass-dock bg-[#080B14]/95 border border-white/10 rounded-2xl py-2 px-2 flex items-center justify-around shadow-2xl backdrop-blur-2xl">
         {items.map((item) => {
           const Icon = item.icon;
           return (

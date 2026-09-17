@@ -29,7 +29,7 @@ export function SpotlightHero({ media }) {
   };
 
   return (
-    <section className="relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-start overflow-hidden pt-16 pb-12">
+    <section className="relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-start overflow-hidden pt-20 sm:pt-24 pb-12">
       {/* Background Image / Ambient Video */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <MediaImage
@@ -39,13 +39,13 @@ export function SpotlightHero({ media }) {
           loading="eager"
           size="w1280"
           placeholderLabel={media.title}
-          className="w-full h-full object-cover object-center filter brightness-[0.65] contrast-[1.08] scale-105 transition-transform duration-1000"
+          className="w-full h-full object-cover object-center filter brightness-[0.78] sm:brightness-[0.7] contrast-[1.08] scale-105 transition-transform duration-1000"
         />
 
-        {/* Ambient Gradient Overlays for Cinematic Depth */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#080B14] via-[#080B14]/80 to-transparent w-full md:w-3/4" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080B14] via-[#080B14]/30 to-transparent" />
-        <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#080B14] to-transparent opacity-80" />
+        {/* Ambient Gradient Overlays for Cinematic Depth with High Visibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080B14] via-[#080B14]/70 to-transparent w-full md:w-3/4" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080B14] via-[#080B14]/25 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#080B14]/80 to-transparent pointer-events-none" />
 
         {/* Subtle Ambient Glowing Mesh */}
         <div className="absolute -top-32 left-1/4 w-96 h-96 bg-[#8B5CF6]/15 rounded-full blur-3xl pointer-events-none" />
