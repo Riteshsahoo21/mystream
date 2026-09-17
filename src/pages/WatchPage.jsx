@@ -46,8 +46,11 @@ export function WatchPage() {
 
   const isInWatchlist = watchlist.includes(media.id);
   const similarTitles = catalog.filter(m => m.id !== media.id && m.genres?.some(g => media.genres?.includes(g))).slice(0, 6);
+  const effectiveServerId = (!activeServer || ['vsembed', 'vidsrcme', 'vidsrcsu'].includes(activeServer))
+    ? 'autoembed'
+    : activeServer;
   const providerUrl = getStreamUrl({
-    serverId: activeServer,
+    serverId: effectiveServerId,
     mediaType: media.type,
     tmdbId: media.tmdbId,
     imdbId: media.imdbId,
@@ -55,7 +58,7 @@ export function WatchPage() {
     episode,
     lang: subtitleLanguage === 'auto' || subtitleLanguage === 'other' ? language : subtitleLanguage
   });
-  const downloadUrl = getDirectDownloadUrl({ serverId: activeServer, downloadUrl: media.downloadUrl });
+  const downloadUrl = getDirectDownloadUrl({ serverId: effectiveServerId, downloadUrl: media.downloadUrl });
   const downloadName = `${media.title}${media.type === 'series' ? `-S${season}E${episode}` : ''}`.replace(/[^a-z0-9-_]+/gi, '-');
 
   return (

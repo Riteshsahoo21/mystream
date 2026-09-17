@@ -12,7 +12,6 @@ function normalizeBaseUrl(value, fallback) {
 
 const ENV = import.meta.env || {};
 const PRIMARY_STREAM_BASE = normalizeBaseUrl(ENV.VITE_STREAM_API_URL, 'https://autoembed.co');
-const VIDSRC_STREAM_BASE = 'https://vsembed.ru';
 
 function buildQuery(params = {}, includeAutonext = false) {
   const { lang = 'en', ...rest } = params;
@@ -134,14 +133,25 @@ export const STREAM_SERVERS = [
     }
   },
   {
-    id: 'vsembed',
-    name: 'Server 5 (VidSrc Alpha)',
-    description: 'International multi-subtitle route (May require VPN on Jio)',
-    badge: 'Global',
-    baseUrl: VIDSRC_STREAM_BASE,
-    getMovieUrl: (identifier, params = {}) => `${VIDSRC_STREAM_BASE}/embed/movie/${encodeURIComponent(identifier)}?${buildQuery(params)}`,
-    getTvUrl: (identifier, season = 1, episode = 1, params = {}) => `${VIDSRC_STREAM_BASE}/embed/tv/${encodeURIComponent(identifier)}/${Number(season) || 1}/${Number(episode) || 1}?${buildQuery(params, true)}`,
-    getSeriesPickerUrl: (identifier, params = {}) => `${VIDSRC_STREAM_BASE}/embed/tv/${encodeURIComponent(identifier)}?${buildQuery(params, true)}`
+    id: 'vidlink',
+    name: 'Server 5 (VidLink HD)',
+    description: 'High-speed cloud stream unblocked on all mobile networks',
+    badge: 'HD Stream',
+    baseUrl: 'https://vidlink.pro',
+    getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || tmdbId || identifier;
+      return `https://vidlink.pro/movie/${encodeURIComponent(id)}`;
+    },
+    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId } = {}) => {
+      const s = Number(season) || 1;
+      const e = Number(episode) || 1;
+      const id = tmdbId || imdbId || identifier;
+      return `https://vidlink.pro/tv/${encodeURIComponent(id)}/${s}/${e}`;
+    },
+    getSeriesPickerUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = tmdbId || imdbId || identifier;
+      return `https://vidlink.pro/tv/${encodeURIComponent(id)}/1/1`;
+    }
   },
   {
     id: 'native',

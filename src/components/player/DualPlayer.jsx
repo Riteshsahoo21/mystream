@@ -124,7 +124,11 @@ export function DualPlayer({ media, initialSeason = 1, initialEpisode = 1 }) {
     setActiveServer(STREAM_SERVERS[nextIndex].id);
   }, [activeServer, setActiveServer]);
 
-  const currentServer = STREAM_SERVERS.find((server) => server.id === activeServer) || STREAM_SERVERS[0];
+  const effectiveServerId = (!activeServer || ['vsembed', 'vidsrcme', 'vidsrcsu'].includes(activeServer))
+    ? 'autoembed'
+    : activeServer;
+
+  const currentServer = STREAM_SERVERS.find((server) => server.id === effectiveServerId) || STREAM_SERVERS[0];
   const effectiveSubtitleLanguage = subtitleLanguage === 'auto' || subtitleLanguage === 'other' ? language : subtitleLanguage;
   const subtitleLabel = subtitleLanguage === 'auto'
     ? `Auto (${language.toUpperCase()})`
@@ -223,7 +227,7 @@ export function DualPlayer({ media, initialSeason = 1, initialEpisode = 1 }) {
   if (!media) return null;
 
   const streamUrl = getStreamUrl({
-    serverId: activeServer,
+    serverId: effectiveServerId,
     mediaType: media.type,
     tmdbId: media.tmdbId,
     imdbId: media.imdbId,
