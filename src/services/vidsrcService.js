@@ -80,9 +80,30 @@ export const STREAM_SERVERS = [
     }
   },
   {
+    id: 'rivestream',
+    name: 'Server 3 (Rive - Global)',
+    description: 'Ultra-fast cloud stream unblocked across all mobile ISPs',
+    badge: 'Fast Cloud',
+    baseUrl: 'https://rivestream.live',
+    getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || tmdbId || identifier;
+      return `https://rivestream.live/embed?type=movie&id=${encodeURIComponent(id)}`;
+    },
+    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId } = {}) => {
+      const s = Number(season) || 1;
+      const e = Number(episode) || 1;
+      const id = imdbId || tmdbId || identifier;
+      return `https://rivestream.live/embed?type=series&id=${encodeURIComponent(id)}&season=${s}&episode=${e}`;
+    },
+    getSeriesPickerUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || tmdbId || identifier;
+      return `https://rivestream.live/embed?type=series&id=${encodeURIComponent(id)}&season=1&episode=1`;
+    }
+  },
+  {
     id: 'smashy',
-    name: 'Server 3 (Smashy)',
-    description: 'Alternative HD multi-source unblocked server',
+    name: 'Server 4 (Smashy HD)',
+    description: 'Alternative multi-source HD unblocked server',
     badge: 'HD Stream',
     baseUrl: 'https://embed.smashystream.com',
     getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
@@ -114,7 +135,7 @@ export const STREAM_SERVERS = [
   },
   {
     id: 'vsembed',
-    name: 'Server 4 (VidSrc Alpha)',
+    name: 'Server 5 (VidSrc Alpha)',
     description: 'International multi-subtitle route (May require VPN on Jio)',
     badge: 'Global',
     baseUrl: VIDSRC_STREAM_BASE,
