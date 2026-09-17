@@ -1,11 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Plus, Check, Info, Sparkles } from 'lucide-react';
+import { Play, Plus, Check, Info } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store/useAppStore';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { getUIText } from '../../services/translationService';
-import { Badge } from '../common/Badge';
 import { MediaImage } from '../common/MediaImage';
 
 export function SpotlightHero({ media }) {
@@ -60,20 +59,6 @@ export function SpotlightHero({ media }) {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-2xl"
         >
-          {/* Eyebrow / Badges */}
-          <div className="flex flex-wrap items-center gap-2.5 mb-4">
-            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#8B5CF6]/30 to-[#22D3EE]/30 border border-[#22D3EE]/40 text-xs font-mono font-medium text-[#22D3EE] backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-[#22D3EE] animate-pulse" />
-              SPOTLIGHT PREMIERE
-            </span>
-            <Badge variant="cyan" size="sm">HD STREAM</Badge>
-            <Badge variant="coral" size="sm">MULTI-SUBTITLE</Badge>
-            <Badge variant="maturity" size="sm">{media.maturityRating || 'NR'}</Badge>
-            <span className="text-xs font-mono font-bold text-[#34D399] ml-1">
-              {Number(media.matchScore) > 0 ? `${media.matchScore}% rating` : 'Available on VidSrc'}
-            </span>
-          </div>
-
           {/* Title */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-black text-white tracking-tight leading-[1.05] mb-3">
             {media.title}
