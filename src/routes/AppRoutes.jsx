@@ -43,10 +43,10 @@ export function AppRoutes() {
       <Route path="/title/:id" element={<TitleDetailsPage />} />
       <Route path="/watch/:id" element={<WatchPage />} />
 
-      {/* 6. User Space, Notifications, Account */}
+      {/* 6. User Space, Notifications, Settings */}
       <Route path="/my-space" element={<MySpacePage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
-      <Route path="/account" element={<AccountPage />} />
+      <Route path="/account" element={<Navigate to="/settings" replace />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/help" element={<HelpPage />} />
 

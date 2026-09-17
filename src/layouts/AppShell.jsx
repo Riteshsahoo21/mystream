@@ -42,8 +42,7 @@ export function AppShell({ children, hideNav = false }) {
 
             <div className="flex flex-wrap items-center justify-center gap-6 text-gray-400">
               <Link to="/help" className="hover:text-white transition-colors">Help Centre</Link>
-              <Link to="/account" className="hover:text-white transition-colors">Account</Link>
-              <Link to="/settings" className="hover:text-white transition-colors">Privacy & Settings</Link>
+              <Link to="/settings" className="hover:text-white transition-colors">Settings</Link>
             </div>
 
             <div className="text-center md:text-right font-mono text-[11px] text-gray-500">

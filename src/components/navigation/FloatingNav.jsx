@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, ChevronDown, ShieldCheck, Settings, X, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Search, Settings, X, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { LanguageSelector } from './LanguageSelector';
 import { getUIText } from '../../services/translationService';
@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function FloatingNav() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -19,10 +18,7 @@ export function FloatingNav() {
   const isWatchPage = location.pathname.startsWith('/watch/');
   const isContentPage = isMovieDetailPage || isWatchPage;
 
-  const {
-    user,
-    language
-  } = useAppStore();
+  const { language } = useAppStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,10 +28,9 @@ export function FloatingNav() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close search bar and menus whenever route changes
+  // Close search bar whenever route changes
   useEffect(() => {
     setIsSearchOpen(false);
-    setIsProfileMenuOpen(false);
   }, [location.pathname]);
 
   const handleSearchSubmit = (e) => {
@@ -142,61 +137,16 @@ export function FloatingNav() {
             {/* Language Selector (Google Cloud Translation) */}
             <LanguageSelector compact />
 
-            {/* Profile Quick-Switch Avatar */}
-            <div className="relative">
-              <button
-                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                className="flex items-center gap-1.5 p-1 rounded-full border border-white/15 hover:border-[#22D3EE]/50 transition-all cursor-pointer group"
-                aria-label="User menu"
-              >
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#22D3EE] p-[1.5px] shadow-sm">
-                  <div className="w-full h-full bg-[#101626] rounded-full flex items-center justify-center text-xs font-semibold text-white">
-                    {user.name.charAt(0)}
-                  </div>
-                </div>
-                <ChevronDown className="w-3.5 h-3.5 text-gray-400 group-hover:text-white transition-transform hidden sm:block" />
-              </button>
-
-              {/* User Dropdown */}
-              <AnimatePresence>
-                {isProfileMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-56 rounded-2xl glass-panel bg-[#101626]/95 border border-white/10 shadow-2xl p-2 z-50"
-                    onMouseLeave={() => setIsProfileMenuOpen(false)}
-                  >
-                    <div className="px-3 py-2 border-b border-white/10 mb-1.5">
-                      <div className="text-xs font-semibold text-white">{user.name}</div>
-                      <div className="text-[11px] text-gray-400 truncate mt-0.5">
-                        Local browser profile
-                      </div>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <Link
-                        to="/account"
-                        onClick={() => setIsProfileMenuOpen(false)}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                      >
-                        <ShieldCheck className="w-3.5 h-3.5 text-gray-400" />
-                        <span>Local Profile</span>
-                      </Link>
-                      <Link
-                        to="/settings"
-                        onClick={() => setIsProfileMenuOpen(false)}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                      >
-                        <Settings className="w-3.5 h-3.5 text-gray-400" />
-                        <span>Playback Settings</span>
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            {/* Settings Tab Button */}
+            <Link
+              to="/settings"
+              className="flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#22D3EE]/50 text-gray-300 hover:text-white text-xs font-medium transition-all cursor-pointer shadow-sm active:scale-95"
+              title="Settings"
+              aria-label="Settings"
+            >
+              <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-300 group-hover:text-[#22D3EE] transition-colors" />
+              <span className="hidden sm:inline">Settings</span>
+            </Link>
           </div>
         </div>
 

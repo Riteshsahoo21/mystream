@@ -1,18 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Compass, Search, Bookmark, User } from 'lucide-react';
+import { Home, Compass, Search, Bookmark, Settings } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { getUIText } from '../../services/translationService';
 
 export function MobileBottomNav() {
-  const { language, user } = useAppStore();
+  const { language } = useAppStore();
 
   const items = [
     { label: getUIText('home', language), path: '/home', icon: Home },
     { label: getUIText('discover', language), path: '/discover', icon: Compass },
     { label: getUIText('search', language), path: '/search', icon: Search },
     { label: getUIText('mySpace', language), path: '/my-space', icon: Bookmark },
-    { label: 'Account', path: '/account', icon: User, isAvatar: true }
+    { label: getUIText('settings', language) || 'Settings', path: '/settings', icon: Settings }
   ];
 
   return (
@@ -35,15 +35,7 @@ export function MobileBottomNav() {
             >
               {({ isActive }) => (
                 <>
-                  {item.isAvatar ? (
-                    <div className={`w-6 h-6 rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#22D3EE] p-[1px] ${isActive ? 'ring-2 ring-[#22D3EE]' : ''}`}>
-                      <div className="w-full h-full bg-[#101626] rounded-full flex items-center justify-center text-[10px] font-bold text-white">
-                        {user.name.charAt(0)}
-                      </div>
-                    </div>
-                  ) : (
-                    <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
-                  )}
+                  <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
                   <span className="text-[10px] font-medium tracking-tight">
                     {item.label}
                   </span>
