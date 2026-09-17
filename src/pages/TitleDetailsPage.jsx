@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { AppShell } from '../layouts/AppShell';
 import { useAppStore } from '../store/useAppStore';
 import { Play, Plus, Check, Star, Layers, Volume2, Globe, Share2, LoaderCircle } from 'lucide-react';
@@ -12,8 +12,11 @@ import { useCatalog, useMediaDetails } from '../hooks/useCatalog';
 
 export function TitleDetailsPage() {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const { data: media, isLoading, error } = useMediaDetails(id);
+  const preview = location.state?.preview;
+  const { data: remoteMedia, isLoading, error } = useMediaDetails(id);
+  const media = remoteMedia || preview;
   const { data: catalog } = useCatalog();
 
   const { watchlist, toggleWatchlist } = useAppStore();
@@ -34,15 +37,15 @@ export function TitleDetailsPage() {
   const currentSeasonData = media.seasons?.find(s => s.seasonNumber === activeSeason) || media.seasons?.[0];
   const seasonEpisodes = (currentSeasonData?.episodes && currentSeasonData.episodes.length > 0)
     ? currentSeasonData.episodes
-    : Array.from({ length: currentSeasonData?.episodesCount || 10 }, (_, i) => ({
+    : Array.from({ length: currentSeasonData?.episodesCount || (media.type === 'series' ? 6 : 1) }, (_, i) => ({
         episodeNumber: i + 1,
         title: `Episode ${i + 1}`,
-        runtime: '48m',
+        runtime: media.runtime || '45m',
         thumbnail: media.backdrop || media.poster,
         synopsis: `${media.title} Season ${currentSeasonData?.seasonNumber || activeSeason} Episode ${i + 1}. Full streaming.`
       }));
 
-  const similarTitles = catalog.filter(m => m.id !== media.id && m.genres?.some(g => media.genres?.includes(g))).slice(0, 6);
+  const similarTitles = (catalog || []).filter(m => m.id !== media?.id && m.genres?.some(g => media?.genres?.includes(g))).slice(0, 6);
 
   const handleShare = () => {
     if (navigator.clipboard) {

@@ -44,7 +44,7 @@ export function MediaCard({
       transition={{ type: 'spring', stiffness: 350, damping: 25 }}
       className={`group relative h-full overflow-hidden rounded-2xl border border-white/5 bg-[#101626] shadow-lg transition-all duration-300 hover:border-[#8B5CF6]/40 hover:shadow-2xl hover:shadow-[#8B5CF6]/20 ${className}`}
     >
-      <Link to={`/title/${media.id}`} className="relative flex h-full w-full flex-col">
+      <Link to={`/title/${media.id}`} state={{ preview: media }} className="relative flex h-full w-full flex-col">
         {/* Aspect Ratio Container */}
         <div className={`w-full relative overflow-hidden bg-[#172033] ${
           variant === 'wide' ? 'aspect-video' : 'aspect-[2/3]'

@@ -158,9 +158,9 @@ async function fetchInventory(type) {
         ids.forEach((id) => bloom.add(id));
         return { ids, idSet, bloom, has: (id) => bloom.has(id) && idSet.has(id) };
       })
-      .catch((error) => {
+      .catch(() => {
         inventoryPromises.delete(normalizedType);
-        throw error;
+        return { ids: [], idSet: new Set(), bloom: null, has: () => true };
       });
     inventoryPromises.set(normalizedType, request);
   }
@@ -427,9 +427,7 @@ export async function fetchCatalogPage(type = 'movie', page = 1, signal) {
 export async function fetchCatalog(_language = 'en', signal) {
   const cachedCatalog = readCache('home-catalog', 30 * 60 * 1000);
   if (cachedCatalog) return cachedCatalog;
-  const [movieInventory, seriesInventory, movieMetas, seriesMetas, featured] = await Promise.all([
-    fetchInventory('movie'),
-    fetchInventory('series'),
+  const [movieMetas, seriesMetas, featured] = await Promise.all([
     fetchCinemetaCatalog('movie', { catalog: 'top' }, signal),
     fetchCinemetaCatalog('series', { catalog: 'top' }, signal),
     Promise.allSettled([
@@ -438,12 +436,8 @@ export async function fetchCatalog(_language = 'en', signal) {
     ])
   ]);
 
-  const popularMovies = movieMetas
-    .filter((meta) => movieInventory.has(meta.imdb_id || meta.id))
-    .map((meta) => mapCinemetaMedia(meta, 'movie'));
-  const popularSeries = seriesMetas
-    .filter((meta) => seriesInventory.has(meta.imdb_id || meta.id))
-    .map((meta) => mapCinemetaMedia(meta, 'series'));
+  const popularMovies = movieMetas.map((meta) => mapCinemetaMedia(meta, 'movie'));
+  const popularSeries = seriesMetas.map((meta) => mapCinemetaMedia(meta, 'series'));
   const featuredTitles = featured
     .filter((result) => result.status === 'fulfilled')
     .map((result) => mapCinemetaMedia(result.value, result.value.type));
@@ -461,8 +455,6 @@ export async function fetchCatalog(_language = 'en', signal) {
 export async function fetchMediaDetails(imdbId, type = 'movie', _language = 'en', signal) {
   if (!/^tt\d+$/.test(String(imdbId || ''))) throw new Error('This title does not have a valid IMDb identifier.');
   const normalizedType = providerType(type);
-  const inventory = await fetchInventory(normalizedType);
-  if (!inventory.has(imdbId)) throw new Error('This title is not currently available from VidSrc.');
   const meta = await fetchCinemetaDetails(imdbId, normalizedType, signal);
   return mapCinemetaMedia(meta, normalizedType);
 }
@@ -482,16 +474,14 @@ export function searchLocalCatalog(query, catalog = []) {
 export async function searchMedia(query, _language = 'en', signal) {
   const normalizedQuery = query.trim();
   if (normalizedQuery.length < 2) return [];
-  const [movieInventory, seriesInventory, movies, series] = await Promise.all([
-    fetchInventory('movie'),
-    fetchInventory('series'),
+  const [movies, series] = await Promise.all([
     fetchCinemetaCatalog('movie', { search: normalizedQuery }, signal),
     fetchCinemetaCatalog('series', { search: normalizedQuery }, signal)
   ]);
 
   return [
-    ...movies.filter((meta) => movieInventory.has(meta.imdb_id || meta.id)).map((meta) => mapCinemetaMedia(meta, 'movie')),
-    ...series.filter((meta) => seriesInventory.has(meta.imdb_id || meta.id)).map((meta) => mapCinemetaMedia(meta, 'series'))
+    ...movies.map((meta) => mapCinemetaMedia(meta, 'movie')),
+    ...series.map((meta) => mapCinemetaMedia(meta, 'series'))
   ].slice(0, 60);
 }
 
