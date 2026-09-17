@@ -2,11 +2,12 @@
 // restricted in Google Cloud because Vite exposes all VITE_* values to clients.
 
 const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY?.trim();
-const TRANSLATE_URL = 'https://translation.googleapis.com/language/translate/v2';
+const PROXY_ENDPOINT = import.meta.env.VITE_TRANSLATE_PROXY_URL?.trim();
+const DIRECT_URL = 'https://translation.googleapis.com/language/translate/v2';
 const CACHE_PREFIX = 'rp_translation_v3_';
 const translationCache = new Map();
 
-export const isTranslationConfigured = Boolean(GOOGLE_API_KEY);
+export const isTranslationConfigured = Boolean(GOOGLE_API_KEY || PROXY_ENDPOINT);
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', native: 'English', flag: '🇺🇸' },
@@ -64,8 +65,15 @@ async function requestTranslationBatch(values, targetLang, options) {
   const timeout = setTimeout(() => controller.abort(), options.timeoutMs || 10000);
 
   try {
-    const url = new URL(TRANSLATE_URL);
-    url.searchParams.set('key', GOOGLE_API_KEY);
+    let url;
+    if (PROXY_ENDPOINT && !GOOGLE_API_KEY) {
+      url = new URL(PROXY_ENDPOINT, window.location.origin);
+    } else {
+      url = new URL(DIRECT_URL);
+      if (GOOGLE_API_KEY) {
+        url.searchParams.set('key', GOOGLE_API_KEY);
+      }
+    }
     const response = await fetch(url, {
       method: 'POST',
       signal: controller.signal,
