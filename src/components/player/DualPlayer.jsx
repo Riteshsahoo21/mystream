@@ -18,7 +18,7 @@ const SIMPLE_SUBTITLE_CHOICES = [
   { code: 'other', name: 'Other languages', flag: '•••' }
 ];
 
-function EmbedFrame({ src, title }) {
+function EmbedFrame({ src, title, onSwitchServer }) {
   const [status, setStatus] = useState('loading');
 
   if (!src) {
@@ -40,7 +40,15 @@ function EmbedFrame({ src, title }) {
       {status === 'error' && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black p-8 text-center">
           <AlertCircle className="h-8 w-8 text-rose-400" />
-          <p className="text-sm text-gray-200">This mirror could not be loaded. Choose another server above.</p>
+          <p className="text-sm text-gray-200">This server could not be loaded on your network.</p>
+          {onSwitchServer && (
+            <button
+              onClick={onSwitchServer}
+              className="mt-2 rounded-xl bg-[#22D3EE] px-4 py-2 text-xs font-semibold text-[#080B14] transition hover:bg-[#22D3EE]/90"
+            >
+              Switch to Next Server
+            </button>
+          )}
         </div>
       )}
       <iframe
@@ -102,6 +110,19 @@ export function DualPlayer({ media, initialSeason = 1, initialEpisode = 1 }) {
   useEffect(() => () => {
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
   }, []);
+
+  // Ensure default server is unblocked on Jio / Indian ISPs
+  useEffect(() => {
+    if (['vsembed', 'vidsrcme', 'vidsrcsu'].includes(activeServer)) {
+      setActiveServer('autoembed');
+    }
+  }, [activeServer, setActiveServer]);
+
+  const handleSwitchToNextServer = useCallback(() => {
+    const currentIndex = STREAM_SERVERS.findIndex((s) => s.id === activeServer);
+    const nextIndex = (currentIndex + 1) % STREAM_SERVERS.length;
+    setActiveServer(STREAM_SERVERS[nextIndex].id);
+  }, [activeServer, setActiveServer]);
 
   const currentServer = STREAM_SERVERS.find((server) => server.id === activeServer) || STREAM_SERVERS[0];
   const effectiveSubtitleLanguage = subtitleLanguage === 'auto' || subtitleLanguage === 'other' ? language : subtitleLanguage;
@@ -266,6 +287,7 @@ export function DualPlayer({ media, initialSeason = 1, initialEpisode = 1 }) {
             key={`${streamUrl}-${effectiveSubtitleLanguage}`}
             src={streamUrl}
             title={`${media.title} player`}
+            onSwitchServer={handleSwitchToNextServer}
           />
         )}
       </div>

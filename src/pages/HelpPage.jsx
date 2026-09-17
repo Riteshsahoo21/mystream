@@ -16,8 +16,8 @@ export function HelpPage() {
       a: 'Navigate to any TV series such as Stranger Things from the Series page or search bar. Click Watch Now to load the episode directly in full 1080p, or click "Episodes" in the top player bar to switch between Seasons 1-4 and jump to any chapter.'
     },
     {
-      q: 'What should I do if a stream buffers or lags on my network?',
-      a: 'RitzlaPlay includes a multi-mirror switcher. Inside the video player toolbar, use the server menu to alternate between Server Alpha (vsembed.ru), Server Beta (vidsrcme.ru), or Server Gamma (vidsrc-embed.su).'
+      q: 'What should I do if a stream buffers or lags on my network (e.g., Jio / Airtel)?',
+      a: 'RitzlaPlay includes a multi-mirror switcher. Inside the video player toolbar, use the server menu to alternate between Server 1 (AutoEmbed - Jio/Airtel fast route), Server 2 (2Embed), Server 3 (Smashy HD), or Server 4 (VidSrc Alpha).'
     },
     {
       q: 'How does the Google Cloud Translation integration work?',
@@ -80,12 +80,12 @@ export function HelpPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-              <div className="text-xs font-semibold text-white">Server Alpha (vsembed.ru)</div>
-              <div className="text-[11px] text-[#34D399] font-mono mt-0.5">Primary catalog and player</div>
+              <div className="text-xs font-semibold text-white">Server 1 (AutoEmbed)</div>
+              <div className="text-[11px] text-[#34D399] font-mono mt-0.5">Primary route (Jio/Airtel optimized)</div>
             </div>
             <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-              <div className="text-xs font-semibold text-white">Server Beta (vidsrcme.ru)</div>
-              <div className="text-[11px] text-[#34D399] font-mono mt-0.5">Playback mirror</div>
+              <div className="text-xs font-semibold text-white">Server 2 (2Embed)</div>
+              <div className="text-[11px] text-[#34D399] font-mono mt-0.5">High availability mirror</div>
             </div>
             <div className="p-3 rounded-xl bg-white/5 border border-white/5">
               <div className="text-xs font-semibold text-white">Google Translate API</div>

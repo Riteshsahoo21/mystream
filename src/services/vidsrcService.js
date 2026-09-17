@@ -11,7 +11,8 @@ function normalizeBaseUrl(value, fallback) {
 }
 
 const ENV = import.meta.env || {};
-const PRIMARY_STREAM_BASE = normalizeBaseUrl(ENV.VITE_STREAM_API_URL, 'https://vsembed.ru');
+const PRIMARY_STREAM_BASE = normalizeBaseUrl(ENV.VITE_STREAM_API_URL, 'https://autoembed.co');
+const VIDSRC_STREAM_BASE = 'https://vsembed.ru';
 
 function buildQuery(params = {}, includeAutonext = false) {
   const { lang = 'en', ...rest } = params;
@@ -23,41 +24,104 @@ function buildQuery(params = {}, includeAutonext = false) {
   }).toString();
 }
 
-function createEmbedServer({ id, name, description, badge, baseUrl }) {
-  return {
-    id,
-    name,
-    description,
-    badge,
-    baseUrl,
-    getMovieUrl: (identifier, params = {}) => `${baseUrl}/embed/movie/${encodeURIComponent(identifier)}?${buildQuery(params)}`,
-    getTvUrl: (identifier, season = 1, episode = 1, params = {}) => `${baseUrl}/embed/tv/${encodeURIComponent(identifier)}/${Number(season) || 1}/${Number(episode) || 1}?${buildQuery(params, true)}`,
-    getSeriesPickerUrl: (identifier, params = {}) => `${baseUrl}/embed/tv/${encodeURIComponent(identifier)}?${buildQuery(params, true)}`
-  };
-}
-
 export const STREAM_SERVERS = [
-  createEmbedServer({
-    id: 'vsembed',
-    name: 'Server Alpha',
-    description: 'Primary multi-subtitle route',
-    badge: 'Primary',
-    baseUrl: PRIMARY_STREAM_BASE
-  }),
-  createEmbedServer({
-    id: 'vidsrcme',
-    name: 'Server Beta',
-    description: 'Global mirror route',
+  {
+    id: 'autoembed',
+    name: 'Server 1 (AutoEmbed - Jio/Airtel)',
+    description: 'High-speed primary route unblocked on Jio, Airtel & mobile',
+    badge: 'Fast',
+    baseUrl: 'https://autoembed.co',
+    getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://autoembed.co/movie/imdb/${encodeURIComponent(id)}`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://autoembed.co/movie/tmdb/${encodeURIComponent(tmdb)}`;
+    },
+    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId } = {}) => {
+      const s = Number(season) || 1;
+      const e = Number(episode) || 1;
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://autoembed.co/tv/imdb/${encodeURIComponent(id)}-${s}-${e}`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://autoembed.co/tv/tmdb/${encodeURIComponent(tmdb)}-${s}-${e}`;
+    },
+    getSeriesPickerUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://autoembed.co/tv/imdb/${encodeURIComponent(id)}-1-1`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://autoembed.co/tv/tmdb/${encodeURIComponent(tmdb)}-1-1`;
+    }
+  },
+  {
+    id: '2embed',
+    name: 'Server 2 (2Embed)',
+    description: 'High-availability global mirror unblocked on Jio',
     badge: 'Mirror',
-    baseUrl: 'https://vidsrcme.ru'
-  }),
-  createEmbedServer({
-    id: 'vidsrcsu',
-    name: 'Server Gamma',
-    description: 'Secondary low-latency route',
-    badge: 'Backup',
-    baseUrl: 'https://vidsrc-embed.su'
-  }),
+    baseUrl: 'https://www.2embed.cc',
+    getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || tmdbId || identifier;
+      return `https://www.2embed.cc/embed/${encodeURIComponent(id)}`;
+    },
+    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId } = {}) => {
+      const s = Number(season) || 1;
+      const e = Number(episode) || 1;
+      const id = imdbId || tmdbId || identifier;
+      return `https://www.2embed.cc/embedtv/${encodeURIComponent(id)}&s=${s}&e=${e}`;
+    },
+    getSeriesPickerUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || tmdbId || identifier;
+      return `https://www.2embed.cc/embedtv/${encodeURIComponent(id)}&s=1&e=1`;
+    }
+  },
+  {
+    id: 'smashy',
+    name: 'Server 3 (Smashy)',
+    description: 'Alternative HD multi-source unblocked server',
+    badge: 'HD Stream',
+    baseUrl: 'https://embed.smashystream.com',
+    getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://embed.smashystream.com/playere.php?imdb=${encodeURIComponent(id)}`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://embed.smashystream.com/playere.php?tmdb=${encodeURIComponent(tmdb)}`;
+    },
+    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId } = {}) => {
+      const s = Number(season) || 1;
+      const e = Number(episode) || 1;
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://embed.smashystream.com/playere.php?imdb=${encodeURIComponent(id)}&season=${s}&episode=${e}`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://embed.smashystream.com/playere.php?tmdb=${encodeURIComponent(tmdb)}&season=${s}&episode=${e}`;
+    },
+    getSeriesPickerUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://embed.smashystream.com/playere.php?imdb=${encodeURIComponent(id)}&season=1&episode=1`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://embed.smashystream.com/playere.php?tmdb=${encodeURIComponent(tmdb)}&season=1&episode=1`;
+    }
+  },
+  {
+    id: 'vsembed',
+    name: 'Server 4 (VidSrc Alpha)',
+    description: 'International multi-subtitle route (May require VPN on Jio)',
+    badge: 'Global',
+    baseUrl: VIDSRC_STREAM_BASE,
+    getMovieUrl: (identifier, params = {}) => `${VIDSRC_STREAM_BASE}/embed/movie/${encodeURIComponent(identifier)}?${buildQuery(params)}`,
+    getTvUrl: (identifier, season = 1, episode = 1, params = {}) => `${VIDSRC_STREAM_BASE}/embed/tv/${encodeURIComponent(identifier)}/${Number(season) || 1}/${Number(episode) || 1}?${buildQuery(params, true)}`,
+    getSeriesPickerUrl: (identifier, params = {}) => `${VIDSRC_STREAM_BASE}/embed/tv/${encodeURIComponent(identifier)}?${buildQuery(params, true)}`
+  },
   {
     id: 'native',
     name: 'Demo Player',
@@ -76,7 +140,7 @@ export const NATIVE_STREAMS = {
 };
 
 export function getStreamUrl({
-  serverId = 'vsembed',
+  serverId = 'autoembed',
   mediaType = 'movie',
   tmdbId,
   imdbId,
@@ -85,16 +149,17 @@ export function getStreamUrl({
   lang = 'en'
 }) {
   const server = STREAM_SERVERS.find((entry) => entry.id === serverId) || STREAM_SERVERS[0];
-  // VidSrc's own inventory is keyed by IMDb ID. Prefer it so playback does not
-  // depend on a separate metadata provider's numeric identifier.
   const identifier = imdbId || tmdbId;
   if (!identifier) return '';
   if (server.isNative) return NATIVE_STREAMS.tearsOfSteel;
-  if (mediaType === 'series' || mediaType === 'tv') return server.getTvUrl(identifier, season, episode, { lang });
-  return server.getMovieUrl(identifier, { lang });
+  const context = { lang, tmdbId, imdbId };
+  if (mediaType === 'series' || mediaType === 'tv') {
+    return server.getTvUrl(identifier, season, episode, context);
+  }
+  return server.getMovieUrl(identifier, context);
 }
 
-export function getDirectDownloadUrl({ serverId = 'vsembed', downloadUrl = '' }) {
+export function getDirectDownloadUrl({ serverId = 'autoembed', downloadUrl = '' }) {
   if (serverId === 'native') return NATIVE_STREAMS.tearsOfSteel;
   if (!downloadUrl) return '';
   try {
