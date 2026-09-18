@@ -46,9 +46,7 @@ export function WatchPage() {
 
   const isInWatchlist = watchlist.includes(media.id);
   const similarTitles = catalog.filter(m => m.id !== media.id && m.genres?.some(g => media.genres?.includes(g))).slice(0, 6);
-  const effectiveServerId = (!activeServer || ['vsembed', 'vidsrcme', 'vidsrcsu'].includes(activeServer))
-    ? 'autoembed'
-    : activeServer;
+  const effectiveServerId = activeServer || 'vsembed';
   const providerUrl = getStreamUrl({
     serverId: effectiveServerId,
     mediaType: media.type,
@@ -63,8 +61,8 @@ export function WatchPage() {
 
   return (
     <div className="min-h-screen bg-[#080B14] text-[#F8FAFC]">
-      {/* Player Section */}
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 pt-2 sm:pt-6">
+      {/* Player Section - Edge-to-edge and bigger on mobile responsive view */}
+      <div className="w-full max-w-7xl mx-auto px-0 sm:px-6 pt-0 sm:pt-6">
         <DualPlayer
           media={media}
           initialSeason={seasonParam}

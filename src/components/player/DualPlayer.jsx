@@ -111,22 +111,13 @@ export function DualPlayer({ media, initialSeason = 1, initialEpisode = 1 }) {
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
   }, []);
 
-  // Ensure default server is unblocked on Jio / Indian ISPs
-  useEffect(() => {
-    if (['vsembed', 'vidsrcme', 'vidsrcsu'].includes(activeServer)) {
-      setActiveServer('autoembed');
-    }
-  }, [activeServer, setActiveServer]);
-
   const handleSwitchToNextServer = useCallback(() => {
     const currentIndex = STREAM_SERVERS.findIndex((s) => s.id === activeServer);
     const nextIndex = (currentIndex + 1) % STREAM_SERVERS.length;
     setActiveServer(STREAM_SERVERS[nextIndex].id);
   }, [activeServer, setActiveServer]);
 
-  const effectiveServerId = (!activeServer || ['vsembed', 'vidsrcme', 'vidsrcsu'].includes(activeServer))
-    ? 'autoembed'
-    : activeServer;
+  const effectiveServerId = activeServer || 'vsembed';
 
   const currentServer = STREAM_SERVERS.find((server) => server.id === effectiveServerId) || STREAM_SERVERS[0];
   const effectiveSubtitleLanguage = subtitleLanguage === 'auto' || subtitleLanguage === 'other' ? language : subtitleLanguage;
@@ -272,7 +263,11 @@ export function DualPlayer({ media, initialSeason = 1, initialEpisode = 1 }) {
     <div
       ref={playerContainerRef}
       onMouseMove={handleMouseMove}
-      className={`relative w-full select-none overflow-hidden bg-[#080B14] ${theaterMode ? 'min-h-screen z-50' : 'aspect-video max-h-[85vh] rounded-2xl border border-white/10 shadow-2xl'}`}
+      className={`relative w-full select-none overflow-hidden bg-[#080B14] ${
+        theaterMode
+          ? 'min-h-screen z-50'
+          : 'h-[44vh] min-h-[290px] max-h-[58vh] sm:h-auto sm:min-h-0 sm:aspect-video sm:max-h-[85vh] rounded-none sm:rounded-2xl border-0 sm:border border-white/10 shadow-2xl'
+      }`}
     >
       <div className="relative h-full w-full bg-black">
         {currentServer.isNative ? (
@@ -302,22 +297,22 @@ export function DualPlayer({ media, initialSeason = 1, initialEpisode = 1 }) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="pointer-events-auto absolute inset-x-0 top-0 z-30 flex items-start justify-between bg-gradient-to-b from-[#080B14]/95 via-[#080B14]/55 to-transparent p-4 sm:p-6"
+            className="pointer-events-auto absolute inset-x-0 top-0 z-30 flex items-start justify-between bg-gradient-to-b from-[#080B14]/95 via-[#080B14]/55 to-transparent p-2.5 sm:p-6"
           >
-            <div className="flex min-w-0 items-center gap-3">
-              <button onClick={() => navigate(-1)} className="rounded-xl bg-white/10 p-2 text-white transition-colors hover:bg-white/20" title="Back">
-                <ArrowLeft className="h-5 w-5" />
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+              <button onClick={() => navigate(-1)} className="rounded-xl bg-white/10 p-1.5 sm:p-2 text-white transition-colors hover:bg-white/20" title="Back">
+                <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
               <div className="min-w-0">
-                <h2 className="truncate text-sm font-bold text-white sm:text-base">{media.title}</h2>
-                <p className="text-xs text-[#22D3EE]">
-                  {media.type === 'series' ? `Season ${season} • Episode ${episode} · ` : ''}
+                <h2 className="truncate text-xs sm:text-base font-bold text-white">{media.title}</h2>
+                <p className="text-[10px] sm:text-xs text-[#22D3EE] truncate">
+                  {media.type === 'series' ? `S${season} E${episode} · ` : ''}
                   Subtitles: {subtitleLabel}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               <div className="relative">
                 <button onClick={() => { setShowSubtitleMenu((open) => !open); setShowServerMenu(false); }} className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20" title="Subtitle language">
                   <Captions className="h-4 w-4 text-[#22D3EE]" />

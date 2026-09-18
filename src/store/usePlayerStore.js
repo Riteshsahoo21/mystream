@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 export const usePlayerStore = create((set) => ({
-  activeServer: 'autoembed',
+  activeServer: 'vsembed',
   season: 1,
   episode: 1,
   theaterMode: false,

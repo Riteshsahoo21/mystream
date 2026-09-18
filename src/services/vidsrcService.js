@@ -25,36 +25,24 @@ function buildQuery(params = {}, includeAutonext = false) {
 
 export const STREAM_SERVERS = [
   {
-    id: 'autoembed',
-    name: 'Server 1 (AutoEmbed - Jio/Airtel)',
-    description: 'High-speed primary route unblocked on Jio, Airtel & mobile',
+    id: 'vsembed',
+    name: 'Server 1 (vsmbed.ru)',
+    description: 'Primary high-speed multi-subtitle streaming route',
     badge: 'Fast',
-    baseUrl: 'https://autoembed.co',
-    getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
-      const id = imdbId || identifier;
-      if (String(id).startsWith('tt')) {
-        return `https://autoembed.co/movie/imdb/${encodeURIComponent(id)}`;
-      }
-      const tmdb = tmdbId || identifier;
-      return `https://autoembed.co/movie/tmdb/${encodeURIComponent(tmdb)}`;
+    baseUrl: 'https://vsembed.ru',
+    getMovieUrl: (identifier, { tmdbId, imdbId, lang = 'en' } = {}) => {
+      const id = imdbId || tmdbId || identifier;
+      return `https://vsembed.ru/embed/movie/${encodeURIComponent(id)}?${buildQuery({ lang })}`;
     },
-    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId } = {}) => {
+    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId, lang = 'en' } = {}) => {
+      const id = imdbId || tmdbId || identifier;
       const s = Number(season) || 1;
       const e = Number(episode) || 1;
-      const id = imdbId || identifier;
-      if (String(id).startsWith('tt')) {
-        return `https://autoembed.co/tv/imdb/${encodeURIComponent(id)}-${s}-${e}`;
-      }
-      const tmdb = tmdbId || identifier;
-      return `https://autoembed.co/tv/tmdb/${encodeURIComponent(tmdb)}-${s}-${e}`;
+      return `https://vsembed.ru/embed/tv/${encodeURIComponent(id)}/${s}/${e}?${buildQuery({ lang }, true)}`;
     },
-    getSeriesPickerUrl: (identifier, { tmdbId, imdbId } = {}) => {
-      const id = imdbId || identifier;
-      if (String(id).startsWith('tt')) {
-        return `https://autoembed.co/tv/imdb/${encodeURIComponent(id)}-1-1`;
-      }
-      const tmdb = tmdbId || identifier;
-      return `https://autoembed.co/tv/tmdb/${encodeURIComponent(tmdb)}-1-1`;
+    getSeriesPickerUrl: (identifier, { tmdbId, imdbId, lang = 'en' } = {}) => {
+      const id = imdbId || tmdbId || identifier;
+      return `https://vsembed.ru/embed/tv/${encodeURIComponent(id)}?${buildQuery({ lang }, true)}`;
     }
   },
   {
@@ -154,6 +142,39 @@ export const STREAM_SERVERS = [
     }
   },
   {
+    id: 'autoembed',
+    name: 'Server 6 (AutoEmbed)',
+    description: 'Alternative fast route unblocked on Jio & Airtel',
+    badge: 'Backup',
+    baseUrl: 'https://autoembed.co',
+    getMovieUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://autoembed.co/movie/imdb/${encodeURIComponent(id)}`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://autoembed.co/movie/tmdb/${encodeURIComponent(tmdb)}`;
+    },
+    getTvUrl: (identifier, season = 1, episode = 1, { tmdbId, imdbId } = {}) => {
+      const s = Number(season) || 1;
+      const e = Number(episode) || 1;
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://autoembed.co/tv/imdb/${encodeURIComponent(id)}-${s}-${e}`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://autoembed.co/tv/tmdb/${encodeURIComponent(tmdb)}-${s}-${e}`;
+    },
+    getSeriesPickerUrl: (identifier, { tmdbId, imdbId } = {}) => {
+      const id = imdbId || identifier;
+      if (String(id).startsWith('tt')) {
+        return `https://autoembed.co/tv/imdb/${encodeURIComponent(id)}-1-1`;
+      }
+      const tmdb = tmdbId || identifier;
+      return `https://autoembed.co/tv/tmdb/${encodeURIComponent(tmdb)}-1-1`;
+    }
+  },
+  {
     id: 'native',
     name: 'Demo Player',
     description: 'Legal sample video for testing native controls',
@@ -171,7 +192,7 @@ export const NATIVE_STREAMS = {
 };
 
 export function getStreamUrl({
-  serverId = 'autoembed',
+  serverId = 'vsembed',
   mediaType = 'movie',
   tmdbId,
   imdbId,
@@ -190,7 +211,7 @@ export function getStreamUrl({
   return server.getMovieUrl(identifier, context);
 }
 
-export function getDirectDownloadUrl({ serverId = 'autoembed', downloadUrl = '' }) {
+export function getDirectDownloadUrl({ serverId = 'vsembed', downloadUrl = '' }) {
   if (serverId === 'native') return NATIVE_STREAMS.tearsOfSteel;
   if (!downloadUrl) return '';
   try {

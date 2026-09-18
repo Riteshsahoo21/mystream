@@ -183,7 +183,7 @@ export const useAppStore = create(
         reducedMotion: false,
         soundEffects: true,
         autoplayPreviews: true,
-        defaultServer: 'autoembed'
+        defaultServer: 'vsembed'
       },
 
       updateSettings: (newSettings) => {

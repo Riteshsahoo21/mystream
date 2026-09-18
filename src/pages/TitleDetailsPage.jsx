@@ -77,7 +77,7 @@ export function TitleDetailsPage() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 w-full flex flex-col sm:flex-row items-start sm:items-end gap-5 sm:gap-8">
           {/* Poster Artwork - prominently visible on BOTH mobile and desktop */}
-          <div className="w-28 sm:w-52 md:w-56 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border border-white/20 shrink-0 shadow-black/80 bg-[#101626]">
+          <div className="w-36 sm:w-52 md:w-56 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border border-white/20 shrink-0 shadow-black/80 bg-[#101626]">
             <MediaImage
               src={media.poster || media.backdrop}
               fallbackSrc={media.backdrop}
@@ -274,7 +274,7 @@ export function TitleDetailsPage() {
           <h3 className="text-xl sm:text-2xl font-display font-bold text-white mb-6">
             Titles in Similar Orbit
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {similarTitles.map((item) => (
               <MediaCard key={item.id} media={item} variant="poster" />
             ))}

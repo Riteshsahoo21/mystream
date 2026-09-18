@@ -16,8 +16,8 @@ export function HelpPage() {
       a: 'Navigate to any TV series such as Stranger Things from the Series page or search bar. Click Watch Now to load the episode directly in full 1080p, or click "Episodes" in the top player bar to switch between Seasons 1-4 and jump to any chapter.'
     },
     {
-      q: 'What should I do if a stream buffers or lags on my network (e.g., Jio / Airtel)?',
-      a: 'RitzlaPlay includes a multi-mirror switcher. Inside the video player toolbar, use the server menu to alternate between Server 1 (AutoEmbed - Jio/Airtel fast route), Server 2 (2Embed), Server 3 (Smashy HD), or Server 4 (VidSrc Alpha).'
+      q: 'What should I do if a stream buffers or lags on my network?',
+      a: 'RitzlaPlay includes a multi-mirror switcher. Inside the video player toolbar, use the server menu to alternate between Server 1 (vsmbed.ru), Server 2 (2Embed), Server 3 (Rive - Global), Server 4 (Smashy HD), Server 5 (VidLink HD), or Server 6 (AutoEmbed).'
     },
     {
       q: 'How does the Google Cloud Translation integration work?',
